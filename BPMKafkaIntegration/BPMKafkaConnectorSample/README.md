@@ -8,7 +8,7 @@ This class implements a sample consumer for the messages sent to a Kafka topic.
 This method waits for the next incoming message on the configured Kafka topic and returns the message. It waits for at most the timeout configured in the configureDetails() method and returns null if there was no new message to return.
 
 Parameters:
-* String **kafkaBootstrapServers**: Connection URL to connect to zookeeper. Typically, this is the output of istool kafka listBrokers.
+* String **kafkaBootstrapServers**: Connection URL to connect to zookeeper. Typically, this is the output of istool kafka listBrokers commans (see below).
 * String **kafkaTopic**: Kafka topic to listen on. Typically, this is "InfosphereEvents".
 * String **kafkaConsumerGroup**: Consumer Group used by this Kafka consumer. Typically, this is "BPMEventConsumerGroup".
 
