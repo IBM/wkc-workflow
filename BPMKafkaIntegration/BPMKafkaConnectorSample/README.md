@@ -2,7 +2,7 @@
  The BPMKafkaConnectorSample folder contains the source code of a sample Java Integration component that allows a BPM process or service to interact with a configured Kafka topic. Currently, this sample allows you to wait for an incoming java message and to get its contents for further processing in BPM. 
 
 # Class BPMKafkaConsumer
-This class implements a sample consumer for the messages sent to a Kafka topic. Note: You might not need the kafka [security propeties] (https://github.com/IBM/wkc-workflow/blob/0cfc9258c3e2d4ea17c54bb61ba328bd0d546d96/BPMKafkaIntegration/BPMKafkaConnectorSample/src/main/java/com/ibm/is/StewardshipCenterSamples/BPMKafkaIntegrationSample/BPMKafkaConsumer.java#L124) if you do not use IBM Information Server Enterprise Search.
+This class implements a sample consumer for the messages sent to a Kafka topic. Note: You might not need the kafka [security propeties](https://github.com/IBM/wkc-workflow/blob/0cfc9258c3e2d4ea17c54bb61ba328bd0d546d96/BPMKafkaIntegration/BPMKafkaConnectorSample/src/main/java/com/ibm/is/StewardshipCenterSamples/BPMKafkaIntegrationSample/BPMKafkaConsumer.java#L124) if you do not use IBM Information Server Enterprise Search.
 
 ## Method getNextEvent(String kafkaBootstrapServers, String kafkaTopic, String kafkaConsumerGroup)
 This method waits for the next incoming message on the configured Kafka topic and returns the message. It waits for at most the timeout configured in the configureDetails() method and returns null if there was no new message to return.
