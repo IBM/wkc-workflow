@@ -4,7 +4,7 @@
 # Class BPMKafkaConsumer
 This class implements a sample consumer for the messages sent to a Kafka topic.
 
-## Method getNextEvent(String zookeeperUrl, String kafkaTopic, String kafkaConsumerGroup)
+## Method getNextEvent(String kafkaBootstrapServers, String kafkaTopic, String kafkaConsumerGroup)
 This method waits for the next incoming message on the configured Kafka topic and returns the message. It waits for at most the timeout configured in the configureDetails() method and returns null if there was no new message to return.
 
 Parameters:
