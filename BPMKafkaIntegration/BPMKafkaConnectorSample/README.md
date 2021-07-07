@@ -75,9 +75,3 @@ Configure required BAW JVM arguments
 Update your BAW application with the new kafka connector sample
 
 8. Use the BAW application designer to replace the existing BPMKafkaConnectorSample-1.0.jar with the provided BPMKafkaConnectorSample-2.0.jar. 
-Note: The source code is also contained in the jar.
- 
-9. required application modifications:
-   - The configureDetails method has been removed. The debug property is provided as a JVM argument now (see step 7 above). 
-   - The getNextEvent method now takes the bootstrap server string (see step 6 above) as the first argument. The zookeeper string is not required anymore.	
-   - The shutdownConsumer method does not take arguments anymore.
