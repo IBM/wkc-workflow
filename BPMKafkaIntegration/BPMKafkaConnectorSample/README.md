@@ -24,7 +24,7 @@ These instructions assume that you have a Java build environment along with GIT 
 * cd into the project folder: `cd BPMKafkaConnectorSample`.
 * Compile and build the package: `mvn package`. This will create a file *BPMKafkaConnectorSample-2.0.jar* in the *target* folder.
 
-# How to deploy the sample's .jar file to BPM
+# How to deploy the sample's .jar file to BPM (for IIS Enterprise Search)
 Before you configure the BAW application, obtain the Kafka CA certificate.
 Note: Step 1 and 2 below are copied from https://www.ibm.com/support/pages/add-or-upgrade-microservices-tier-existing-installation-information-server-11711-or-later
 
