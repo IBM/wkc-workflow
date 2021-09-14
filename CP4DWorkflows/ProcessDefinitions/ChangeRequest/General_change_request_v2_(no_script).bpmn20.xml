@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="https://dataplatform.cloud.ibm.com/workflows/requests/general_change_request_noscript_namespace">
+  <process id="general_change_request_noscript_v2" name="General change request" isExecutable="true">
+    <documentation>General change request (no script)</documentation>
+    <startEvent id="startEvent1" flowable:formFieldValidation="true">
+      <extensionElements>
+        <flowable:formProperty id="title" name="Request title" type="string" readable="false" required="true"></flowable:formProperty>
+        <flowable:formProperty id="summary" name="Summary of change" type="string" readable="false" required="true"></flowable:formProperty>
+        <flowable:formProperty id="description" name="Description" type="string" readable="false" required="true"></flowable:formProperty>
+        <flowable:formProperty id="category" name="Category" type="string" expression="${cpd:conf('{&quot;cpd_type&quot;:&quot;wkc_category&quot;,&quot;kind&quot;:&quot;trigger&quot;}')}" readable="false"></flowable:formProperty>
+      </extensionElements>
+    </startEvent>
+    <userTask id="sid-B11DE76D-D8CF-4283-B040-33284F3837F4" name="Approval" flowable:category="approval" flowable:formFieldValidation="true">
+      <documentation>Approve ${artifact_name}$$$Please either approve or reject this change request$$$Add at least one assignee for an approval decision of this change request$$$Approve ${artifact_name}</documentation>
+      <extensionElements>
+        <flowable:formProperty id="title" name="Request title" type="string" writable="false" required="false"></flowable:formProperty>
+        <flowable:formProperty id="summary" name="Summary of change request" type="string" writable="false" required="false"></flowable:formProperty>
+        <flowable:formProperty id="description" name="Description" type="string" writable="false" required="false"></flowable:formProperty>
+        <flowable:formProperty id="category" name="Category" type="string" writable="false"></flowable:formProperty>
+        <flowable:formProperty id="action" type="enum" readable="false" required="true">
+          <flowable:value id="approved" name="Approved"></flowable:value>
+          <flowable:value id="rejected" name="Reject"></flowable:value>
+        </flowable:formProperty>
+        <flowable:formProperty id="comment" name="Comment" type="string"></flowable:formProperty>
+      </extensionElements>
+    </userTask>
+    <endEvent id="sid-ACAA69FD-E876-46A6-ADE2-CF78282C2C05" name="Request approved"></endEvent>
+    <exclusiveGateway id="gateway1" name="More Info needed?" default="flow10"></exclusiveGateway>
+    <userTask id="sid-1169EE6C-8B38-4B35-ABF0-1D896CBD47FB" name="Follow-up" flowable:category="approval" flowable:formFieldValidation="true">
+      <documentation>Continue review ${artifact_name}$$$Please either continue to review and discuss this change request or cancel the request all together$$$Add at least one assignee for a the continued review of this change request$$$Follow-up ${artifact_name}</documentation>
+      <extensionElements>
+        <flowable:formProperty id="title" name="Request title" type="string" writable="false"></flowable:formProperty>
+        <flowable:formProperty id="summary" name="Summary of change request" type="string"></flowable:formProperty>
+        <flowable:formProperty id="description" name="Description" type="string"></flowable:formProperty>
+        <flowable:formProperty id="category" name="Category" type="string" writable="false"></flowable:formProperty>
+        <flowable:formProperty id="action" type="enum" readable="false" required="true">
+          <flowable:value id="continue_review" name="Continue Review"></flowable:value>
+          <flowable:value id="-discard" name="Discard change request"></flowable:value>
+        </flowable:formProperty>
+        <flowable:formProperty id="comment" name="Comment" type="string"></flowable:formProperty>
+      </extensionElements>
+    </userTask>
+    <userTask id="sid-4B341EAD-B977-40B6-865A-8C2105985D8E" name="Review" flowable:category="approval" flowable:formFieldValidation="true">
+      <documentation>Review ${artifact_name}$$$Please review this change request and then either send it to approval or continue the review discussion$$$Add at least one assignee for review discussions of this request$$$Review ${artifact_name}</documentation>
+      <extensionElements>
+        <flowable:formProperty id="title" name="Request title" type="string" writable="false" required="false"></flowable:formProperty>
+        <flowable:formProperty id="summary" name="Summary of change request" type="string" required="false"></flowable:formProperty>
+        <flowable:formProperty id="description" name="Description" type="string" required="false"></flowable:formProperty>
+        <flowable:formProperty id="category" name="Category" type="string" writable="false"></flowable:formProperty>
+        <flowable:formProperty id="action" type="enum" readable="false" required="true">
+          <flowable:value id="completed" name="Review completed"></flowable:value>
+          <flowable:value id="-moreinfo" name="More Info needed"></flowable:value>
+        </flowable:formProperty>
+        <flowable:formProperty id="comment" name="Comment" type="string"></flowable:formProperty>
+      </extensionElements>
+    </userTask>
+    <exclusiveGateway id="sid-9AE55277-6CE4-45EF-AC40-DD718F1B631A" name="Approve request?" default="flow20"></exclusiveGateway>
+    <exclusiveGateway id="sid-F3866A37-FAA8-47AF-9CA9-32440CCD9A94" name="Proceed with review?" default="flow13"></exclusiveGateway>
+    <sequenceFlow id="flow5" sourceRef="sid-B11DE76D-D8CF-4283-B040-33284F3837F4" targetRef="sid-9AE55277-6CE4-45EF-AC40-DD718F1B631A"></sequenceFlow>
+    <endEvent id="request_rejected" name="Request rejected"></endEvent>
+    <endEvent id="request_canceled" name="Request canceled"></endEvent>
+    <sequenceFlow id="flow3" sourceRef="sid-4B341EAD-B977-40B6-865A-8C2105985D8E" targetRef="gateway1"></sequenceFlow>
+    <sequenceFlow id="flow1" sourceRef="startEvent1" targetRef="sid-4B341EAD-B977-40B6-865A-8C2105985D8E"></sequenceFlow>
+    <sequenceFlow id="flow20" name="reject request" sourceRef="sid-9AE55277-6CE4-45EF-AC40-DD718F1B631A" targetRef="request_rejected"></sequenceFlow>
+    <sequenceFlow id="flow4" name="approve request" sourceRef="gateway1" targetRef="sid-B11DE76D-D8CF-4283-B040-33284F3837F4">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${action == 'completed'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow10" name="continue review" sourceRef="gateway1" targetRef="sid-1169EE6C-8B38-4B35-ABF0-1D896CBD47FB"></sequenceFlow>
+    <sequenceFlow id="flow11" sourceRef="sid-1169EE6C-8B38-4B35-ABF0-1D896CBD47FB" targetRef="sid-F3866A37-FAA8-47AF-9CA9-32440CCD9A94"></sequenceFlow>
+    <sequenceFlow id="flow12" name="continue review" sourceRef="sid-F3866A37-FAA8-47AF-9CA9-32440CCD9A94" targetRef="sid-4B341EAD-B977-40B6-865A-8C2105985D8E">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${action == "continue_review"}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow13" name="cancel request" sourceRef="sid-F3866A37-FAA8-47AF-9CA9-32440CCD9A94" targetRef="request_canceled"></sequenceFlow>
+    <sequenceFlow id="flow6" name="execute request" sourceRef="sid-9AE55277-6CE4-45EF-AC40-DD718F1B631A" targetRef="sid-ACAA69FD-E876-46A6-ADE2-CF78282C2C05">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${action == "approved"}]]></conditionExpression>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_affie_change_request_noscript">
+    <bpmndi:BPMNPlane bpmnElement="affie_change_request_noscript" id="BPMNPlane_affie_change_request_noscript">
+      <bpmndi:BPMNShape bpmnElement="startEvent1" id="BPMNShape_startEvent1">
+        <omgdc:Bounds height="30.0" width="30.0" x="0.0" y="157.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-B11DE76D-D8CF-4283-B040-33284F3837F4" id="BPMNShape_sid-B11DE76D-D8CF-4283-B040-33284F3837F4">
+        <omgdc:Bounds height="80.0" width="100.0" x="645.0" y="135.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-ACAA69FD-E876-46A6-ADE2-CF78282C2C05" id="BPMNShape_sid-ACAA69FD-E876-46A6-ADE2-CF78282C2C05">
+        <omgdc:Bounds height="28.0" width="28.0" x="1140.0" y="161.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="gateway1" id="BPMNShape_gateway1">
+        <omgdc:Bounds height="40.0" width="40.0" x="495.0" y="155.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-1169EE6C-8B38-4B35-ABF0-1D896CBD47FB" id="BPMNShape_sid-1169EE6C-8B38-4B35-ABF0-1D896CBD47FB">
+        <omgdc:Bounds height="80.0" width="100.0" x="465.0" y="295.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-4B341EAD-B977-40B6-865A-8C2105985D8E" id="BPMNShape_sid-4B341EAD-B977-40B6-865A-8C2105985D8E">
+        <omgdc:Bounds height="80.0" width="100.0" x="285.0" y="132.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-9AE55277-6CE4-45EF-AC40-DD718F1B631A" id="BPMNShape_sid-9AE55277-6CE4-45EF-AC40-DD718F1B631A">
+        <omgdc:Bounds height="40.0" width="40.0" x="825.0" y="155.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-F3866A37-FAA8-47AF-9CA9-32440CCD9A94" id="BPMNShape_sid-F3866A37-FAA8-47AF-9CA9-32440CCD9A94">
+        <omgdc:Bounds height="40.0" width="40.0" x="315.0" y="315.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="request_rejected" id="BPMNShape_request_rejected">
+        <omgdc:Bounds height="28.0" width="28.0" x="831.0" y="480.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="request_canceled" id="BPMNShape_request_canceled">
+        <omgdc:Bounds height="28.0" width="28.0" x="321.0" y="480.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="29.94999976597885" y="172.0"></omgdi:waypoint>
+        <omgdi:waypoint x="285.0" y="172.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow13" id="BPMNEdge_flow13">
+        <omgdi:waypoint x="335.4398734177215" y="354.50393738140417"></omgdi:waypoint>
+        <omgdi:waypoint x="335.0440060937692" y="480.0000685122137"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
+        <omgdi:waypoint x="384.9499999999989" y="172.83249999999998"></omgdi:waypoint>
+        <omgdi:waypoint x="495.28481703986813" y="174.672131147541"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+        <omgdi:waypoint x="534.9444614102993" y="175.0"></omgdi:waypoint>
+        <omgdi:waypoint x="644.9999999999723" y="175.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
+        <omgdi:waypoint x="744.9499999999581" y="175.0"></omgdi:waypoint>
+        <omgdi:waypoint x="825.0" y="175.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow20" id="BPMNEdge_flow20">
+        <omgdi:waypoint x="845.5" y="194.44694781498245"></omgdi:waypoint>
+        <omgdi:waypoint x="845.5" y="480.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
+        <omgdi:waypoint x="864.4776777020447" y="175.46915584415584"></omgdi:waypoint>
+        <omgdi:waypoint x="1140.0000152454845" y="175.02260946939373"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow10" id="BPMNEdge_flow10">
+        <omgdi:waypoint x="515.0" y="194.94376951905065"></omgdi:waypoint>
+        <omgdi:waypoint x="515.0" y="295.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow11" id="BPMNEdge_flow11">
+        <omgdi:waypoint x="465.0" y="335.0"></omgdi:waypoint>
+        <omgdi:waypoint x="354.90551695386324" y="335.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow12" id="BPMNEdge_flow12">
+        <omgdi:waypoint x="335.43865030674846" y="315.43865030674846"></omgdi:waypoint>
+        <omgdi:waypoint x="335.1221712538226" y="211.95000000000002"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
