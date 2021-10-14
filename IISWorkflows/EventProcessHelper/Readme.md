@@ -1,4 +1,5 @@
 # Install instructions #
+## Fix for Information Server Enterprise Search ##
 
 To install the updated initEventProcessHelper.bpmn, download initEventProcessHelper.bpmn and run the curl command listed below:
 
