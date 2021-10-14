@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+  <process id="initEventProcessHelper" name="Init Event Process Helper" isExecutable="true">
+    <startEvent id="startevent1" name="Start"></startEvent>
+    <scriptTask id="scripttask1" name="Parse Event Payload" scriptFormat="javascript" activiti:autoStoreVariables="false">
+      <script><![CDATA[print("Init Event Process Helper v190114 started\n");
+
+var parentExecution =  execution.getSuperExecution();
+var targetExecution = execution;
+if (parentExecution != null) {
+  targetExecution = parentExecution;
+}
+
+var iisHostname =  configProps.get('com.ibm.iis.hostname');
+targetExecution.setVariable('iisHostname', iisHostname);
+var iisDomain =  'https://' + iisHostname + ':' + configProps.get('com.ibm.iis.port');
+targetExecution.setVariable('iisDomain', iisDomain);
+targetExecution.setVariable('iisUserAliasName', configProps.get('com.ibm.iis.useralias'));
+print("Using iisDomain " + iisDomain + "\n");
+
+try {
+  if (typeof eventPayload !== 'undefined') {
+    // Apache Wink Json4J JSONObject is serializable, which allows to store arbitrarily nested
+    // json structures as value of a process variable.
+    var payloadMap = new org.apache.wink.json4j.JSONObject(eventPayload);
+    if (payloadMap.has('eventType')) {
+        var eventType = payloadMap.get('eventType');
+        print("Found IIS event of type " + eventType + "\n");
+    	print("Parsing properties in event payload.\n");
+        for (var keyIter = payloadMap.keys(); keyIter.hasNext();) {
+          var key = keyIter.next();
+          value = payloadMap.get(key);
+          if (value != undefined) {
+            print('' +  eventType + ' has key ' + key + ' with value ' + value + ' of type ' + typeof value +"\n");
+            try {
+              targetExecution.setVariable(key, value);
+            } catch (e) {
+	       print("Exception occurred while setting variable value for key: " + key);
+	       print(e + "\n");
+            }           
+          } else {
+            print('' +  eventType + ' has key ' + key + ' with undefined value.\n');
+          }
+        }
+    } else {
+      print("Event JSON contains no eventType: " + eventPayload + "\n");
+    }
+  } else {
+    print("No eventPayload was provided to initEventProcessHelper.\n");
+  }
+} catch (e) {
+	print("Exception occurred while parsing eventPayload: " + eventPayload + "\n");
+	print(e + "\n");
+}
+]]></script>
+    </scriptTask>
+    <sequenceFlow id="flow1" sourceRef="startevent1" targetRef="callactivity1"></sequenceFlow>
+    <callActivity id="callactivity1" name="Read Config Props" calledElement="readConfigProps">
+      <extensionElements>
+        <activiti:out source="configProps" target="configProps"></activiti:out>
+      </extensionElements>
+    </callActivity>
+    <endEvent id="endevent1" name="End"></endEvent>
+    <sequenceFlow id="flow3" sourceRef="callactivity1" targetRef="scripttask1"></sequenceFlow>
+    <sequenceFlow id="flow4" sourceRef="scripttask1" targetRef="endevent1"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_initEventProcessHelper">
+    <bpmndi:BPMNPlane bpmnElement="initEventProcessHelper" id="BPMNPlane_initEventProcessHelper">
+      <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="60.0" y="110.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="scripttask1" id="BPMNShape_scripttask1">
+        <omgdc:Bounds height="55.0" width="105.0" x="290.0" y="100.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="callactivity1" id="BPMNShape_callactivity1">
+        <omgdc:Bounds height="55.0" width="105.0" x="140.0" y="100.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="440.0" y="110.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="95.0" y="127.0"></omgdi:waypoint>
+        <omgdi:waypoint x="140.0" y="127.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
+        <omgdi:waypoint x="245.0" y="127.0"></omgdi:waypoint>
+        <omgdi:waypoint x="290.0" y="127.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+        <omgdi:waypoint x="395.0" y="127.0"></omgdi:waypoint>
+        <omgdi:waypoint x="440.0" y="127.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
