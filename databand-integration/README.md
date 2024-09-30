@@ -8,6 +8,8 @@ as a "pipeline". This enables the definition of alerts in Databand for each work
 
 An existing governance artifact management workflow is required.
 
+Last verified with IBM Knowledge Catalog 5.0.3 and IBM Databand 1.0.104.3.
+
 To run the demo, create a `config.properties` file in the root folder with this content:
 
 ```
