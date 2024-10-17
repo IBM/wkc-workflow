@@ -48,6 +48,8 @@ For more information, visit Flowable's [Docker Hub](https://hub.docker.com/r/flo
 
 To run Flowable Modeler using a `.war` file, you need to have **Java JDK 8 or greater** installed.
 
+> **Note:** As of October 2024, the latest version of Flowable that includes the UI and the `flowable-ui.war` file is `6.8.1`.
+
 1. Navigate to Flowable's official [Releases](https://github.com/flowable/flowable-engine/releases) page.
    - Download the release zip file from the **assets** section of the desired version.
    - Extract the zip file and navigate to the `wars` folder.
