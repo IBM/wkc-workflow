@@ -98,4 +98,4 @@ Once you've completed your changes, deploy the updated template back to CPD:
 
 ### Creating New Workflow Types
 
-If the workflow type does not yet exist, refer to the [IBM Documentation](https://www.ibm.com/docs/en/cloud-paks/cp-data/4.7.x?topic=workflows-importing-custom-process-definitions) for guidance on importing custom process definitions.
+If the workflow type does not yet exist, refer to the [IBM Documentation](https://www.ibm.com/docs/en/cloud-paks/cp-data/5.0.x?topic=workflows-importing-custom-process-definitions) for guidance on importing custom process definitions.
