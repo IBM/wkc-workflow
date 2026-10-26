@@ -35,10 +35,35 @@ and provide the values.
 
 Then run
 
-`
+```bash
 mvn clean compile assembly:single
-`
+```
 
-`
+```bash
 java -jar target/ikc-workflow-databand-1.0-SNAPSHOT-jar-with-dependencies.jar
-`
+```
+
+## Handling Self-Signed or Custom Internal CA Certificates
+
+The application uses the default Java trust store to validate TLS/SSL certificates. If your IKC or Databand instance uses a self-signed certificate or a certificate signed by an internal/private CA:
+
+### Option 1: Pass a custom trust store at runtime (Recommended)
+
+Run the application with the `-Djavax.net.ssl.trustStore` and `-Djavax.net.ssl.trustStorePassword` system properties:
+
+```bash
+java -Djavax.net.ssl.trustStore=/path/to/truststore.p12 \
+     -Djavax.net.ssl.trustStorePassword=<password> \
+     -jar target/ikc-workflow-databand-1.0-SNAPSHOT-jar-with-dependencies.jar
+```
+
+### Option 2: Import the certificate into the JVM trust store
+
+Import your server or CA certificate into the standard Java `cacerts` keystore:
+
+```bash
+keytool -importcert -trustcacerts -alias ikc-server \
+  -file /path/to/server-cert.pem \
+  -keystore "$JAVA_HOME/lib/security/cacerts" \
+  -storepass changeit
+```

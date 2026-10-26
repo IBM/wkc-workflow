@@ -24,14 +24,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-
-import com.ibm.integration.util.DummyTrustManager;
 import com.ibm.integration.util.JsonParser;
 
 public class Connection {
@@ -40,10 +33,8 @@ public class Connection {
     private final HttpClient client;
     private final String bearerToken;
 
-    public Connection() throws KeyManagementException, NoSuchAlgorithmException, IOException, InterruptedException {
-        SSLContext sslContext = SSLContext.getInstance("SSL");
-        sslContext.init(null, new TrustManager[] { new DummyTrustManager() }, new SecureRandom());
-        this.client = HttpClient.newBuilder().sslContext(sslContext).build();
+    public Connection() throws IOException, InterruptedException {
+        this.client = HttpClient.newHttpClient();
         this.bearerToken = generateBearerToken();
     }
 
